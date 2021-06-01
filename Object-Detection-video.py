@@ -1,20 +1,20 @@
+# ----------------------- Imports
 import streamlit as st
 import cv2
 import numpy as np
 
-
-# ------------------- Inicio básico
+# ------------------- Início básico
 st.title("Detecção de Objetos")
 st.write("Aplicação simples para detecção de veículos em um vídeo (apenas um teste)")
 
-video = open('corte2.mp4', 'rb')
+video = open('corte2.mp4', 'rb') #Inserir vídeo desejado
 st.write("Vídeo original:")
 st.video(video.read())
 
-# --------------------- Carregar YOLO
-net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
+# --------------------- Carrega a YOLO
+net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg") #Arquivos Yolo
 classes = []
-with open("Labels.txt", "r") as f:
+with open("Labels.txt", "r") as f: #Arquivo com as labels
     classes = [line.strip() for line in f.readlines()]
 layer_names = net.getLayerNames()
 output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
@@ -62,7 +62,7 @@ while True:
             cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
             cv2.putText(img, label, (x, y + 30), font, 2, color, 3)
 
-    st.write("Resultado da detecção:")
+    st.write("Resultado da detecção (frame por frame):")
     st.image(img)
     if cv2.waitKey(1) == 27:
         break
