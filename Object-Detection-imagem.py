@@ -1,27 +1,28 @@
+# ----------------------- Imports
 import streamlit as st
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-# ------------------- Inicio básico
+# ------------------- Início básico
 st.title("Detecção de Objetos")
-st.write("Aplicação simples para detecção de uma carro em uma imagem (apenas um teste)")
+st.write("Aplicação simples para detecção de veículos em uma imagem (apenas um teste)")
 
 st.write("Imagem original:")
-img = cv2.imread('frame.jpg')
+img = cv2.imread('frame.jpg') #Inserir imagem desejada
 st.image(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 
 
-# --------------------- Inicio detecção
-
-net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
+# --------------------- Carrega a YOLO
+net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg") #Arquivos yolo
 classes = []
-with open("Labels.txt", "r") as f:
+with open("Labels.txt", "r") as f: #arquivo com as labels
     classes = [line.strip() for line in f.readlines()]
 layer_names = net.getLayerNames()
 output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 colors = np.random.uniform(0, 255, size=(len(classes), 3))
 
+# --------------------- Início detecção
 height, width, channels = img.shape
 blob = cv2.dnn.blobFromImage(img, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
 net.setInput(blob)
